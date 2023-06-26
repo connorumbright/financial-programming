@@ -1,0 +1,27 @@
+import yfinance as yf
+import pandas as pd
+
+# Define the list of ticker symbols for the desired stocks
+ticker_symbols = ["PXD", "WMT", "BHP", "PSX", "NEE", "PRU", "FSLR", "WBA", "MDLZ"]
+
+# Define the start and end dates for the price data
+start_date = "2023-01-01"
+end_date = "2023-06-01"
+
+# Create an empty list to store the stock DataFrames
+stock_dfs = []
+
+# Fetch the historical price data for each stock and append to the list
+for ticker_symbol in ticker_symbols:
+    stock_data = yf.download(ticker_symbol, start=start_date, end=end_date)
+    stock_df = pd.DataFrame(stock_data["Adj Close"])
+    stock_df.columns = [ticker_symbol]
+    stock_dfs.append(stock_df)
+
+# Combine the individual stock DataFrames into a single DataFrame
+combined_df = pd.concat(stock_dfs, axis=1)
+
+# Print the combined DataFrame
+print(combined_df)
+
+combined_df.to_csv('port.csv', index='False')
